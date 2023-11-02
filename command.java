@@ -38,6 +38,9 @@ public class command {
 		return commandtype == CommandType.QUIT;
 	}
 
+    public boolean roll(){
+        return commandtype == CommandType.ROLL;
+    }
 
 
 }
