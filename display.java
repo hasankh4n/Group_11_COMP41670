@@ -17,6 +17,7 @@ public class display {
     }
 
     public void info() {
+        System.out.println("\n" + "Welcome to Backgammon");
 		System.out.println("\n" + "To play , use 'R' to roll the dice");
         System.out.println("Enter 'Q' to quit!");
 	}
@@ -33,15 +34,34 @@ public class display {
     public void getPlayerNames (board board) { 
 		boolean validInput = false;
 
-		System.out.print("Enter name of player 1: ");
-        String player1Name = in.nextLine();
+        String player1Name = "";
+        String player2Name = "";
 
-        System.out.print("Enter Player 2's name: ");
-        String player2Name = in.nextLine();
+        // Player Name vaildation
+        while (true) {
+            System.out.print("Enter name of Player 1: ");
+            player1Name = in.nextLine();
 
-        System.out.println("Player 1's name is: " + player1Name);
-        System.out.println("Player 2's name is: " + player2Name);
-		
+            if (player1Name.matches("[a-zA-Z]+")) {
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter only letters.");
+            }
+        }
+
+        while (true) {
+            System.out.print("Enter name of Player 2: ");
+            player2Name = in.nextLine();
+
+            if (player2Name.matches("[a-zA-Z]+")) {
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter only letters.");
+            }
+        }
+
+        System.out.println("\n" + "Player 1's name is: " + player1Name);
+        System.out.println("Player 2's name is: " + player2Name);		
 	}
 
     // Prompt user for input and return validated input command
