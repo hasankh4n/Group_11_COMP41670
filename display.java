@@ -31,7 +31,7 @@ public class display {
     //
 	//}
 
-    public void getPlayerNames (board board) { 
+    public void getPlayerNames (Board board) { 
 		boolean validInput = false;
 
         String player1Name = "";
