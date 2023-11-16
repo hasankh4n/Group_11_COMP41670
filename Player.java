@@ -1,4 +1,3 @@
-package BackgammonTest;
 
 public class Player {
 
