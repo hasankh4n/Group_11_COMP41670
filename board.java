@@ -243,7 +243,7 @@ public class Board {
 			
 		}
 		
-		System.out.print(ConsoleColors.YELLOW_BACKGROUND_FULL + "\n-------------------------------------------------------------------------------------------------\n");
+		System.out.print(ConsoleColors.YELLOW_BACKGROUND_FULL + "\n-------------------------------------------------------------------------------------------------\n" + ConsoleColors.RESET);
 
 	}
 	

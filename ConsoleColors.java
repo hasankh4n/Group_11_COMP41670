@@ -1,4 +1,4 @@
-package BackgammonTest;
+
 
 public class ConsoleColors {
 
