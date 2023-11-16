@@ -13,6 +13,7 @@ public class backgammon {
             board.printBoard();
             //Board.printBoard();
             boolean commandIn = false;
+            board.whosFIrst(dice);
             do{
                 command = display.getUserInput();
                 if (command.quit())
