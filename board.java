@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -57,14 +56,52 @@ public class Board {
 				outer2.add(new Point());
 				
 			}
+			
 		}
+		
+		
+	}
+	
+	public void whosFIrst(Dice dice) {
+		
+		System.out.println(ConsoleColors.RESET + "Roll to see who's first: \n");
+
+		int firstRoll[] = new int[2];
+		
+		do {
+			
+			dice.roll();
+			
+			firstRoll = dice.getFaces();
+			
+			dice.showFaces();
+		
+			if (firstRoll[0] == firstRoll[1]) {
+				
+				System.out.println(ConsoleColors.RESET + "Need to roll again\n" + ConsoleColors.RESET);
+				
+			}
+			
+			else if (firstRoll[0] > firstRoll[1]) {
+				
+				System.out.println(ConsoleColors.WHITE_BOLD_BRIGHT + "Player 1 goes first!\n" + ConsoleColors.RESET);
+				
+			}
+			
+			else {
+				
+				System.out.println(ConsoleColors.RED + "Player 2 goes first!\n" + ConsoleColors.RESET);
+				
+			}
+		
+		} while (firstRoll[0] == firstRoll[1]);
 		
 		
 	}
 	
 	public void printBoard() {
 		
-		System.out.println("-------------------------------------------------------------------------------------------------");
+		System.out.println(ConsoleColors.YELLOW_BACKGROUND_FULL + "-------------------------------------------------------------------------------------------------" + ConsoleColors.RESET);
 
 		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
@@ -74,15 +111,14 @@ public class Board {
 			
 		}
 		
-		System.out.print("|||\t");
-		
+		System.out.print(ConsoleColors.YELLOW_BACKGROUND + "   " + ConsoleColors.RESET + " \t");		
 		for (int y = 19; y < 25; y++) {
 			
 			System.out.print(y + "\t");
 			
 		}
 		
-		System.out.print("\n-------------------------------------------------------------------------------------------------\n");
+		System.out.print(ConsoleColors.YELLOW_BACKGROUND_FULL + "\n-------------------------------------------------------------------------------------------------\n" + ConsoleColors.RESET);
 		
 		for (int j = 0; j < 5; j++) {
 			
@@ -94,7 +130,7 @@ public class Board {
 				
 				if ((outer2.get(n).getCounters().size()-1) < j) {
 					
-					System.out.print("|" + "\t");
+					System.out.print(ConsoleColors.GREEN + "|" + "\t");
 					
 				}
 				
@@ -108,8 +144,7 @@ public class Board {
 				
 			}
 
-			System.out.print("|||\t");
-			
+			System.out.print(ConsoleColors.YELLOW_BACKGROUND + "   " + ConsoleColors.RESET + " \t");			
 			//PLAYER 2 OUTER PRINT
 			
 			int p = 0;
@@ -118,7 +153,7 @@ public class Board {
 				
 				if ((home2.get(p).getCounters().size()-1) < j) {
 					
-					System.out.print("|" + "\t");
+					System.out.print(ConsoleColors.GREEN + "|" + "\t");
 					
 				}
 				
@@ -136,7 +171,7 @@ public class Board {
 						
 		}
 		
-		System.out.print("-------------------------------------------------------------------------------------------------\n");
+		System.out.print(ConsoleColors.YELLOW_BACKGROUND_FULL + "-------------------------------------------------------------------------------------------------\n" + ConsoleColors.RESET);
 
 		for (int k = 4; k >= 0; k--) {
 			
@@ -148,7 +183,7 @@ public class Board {
 				
 				if ((outer1.get(n).getCounters().size()-1) < k) {
 					
-					System.out.print("|" + "\t");
+					System.out.print(ConsoleColors.GREEN + "|" + "\t");
 					
 				}
 				
@@ -162,7 +197,7 @@ public class Board {
 				
 			}
 			
-			System.out.print("|||\t");
+			System.out.print(ConsoleColors.YELLOW_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
 			
 			//PLAYER 2 OUTER PRINT
 			
@@ -172,7 +207,7 @@ public class Board {
 				
 				if ((home1.get(p).getCounters().size()-1) < k) {
 					
-					System.out.print("|" + "\t");
+					System.out.print(ConsoleColors.GREEN + "|" + "\t");
 					
 				}
 				
@@ -190,7 +225,7 @@ public class Board {
 						
 		}
 		
-		System.out.println("-------------------------------------------------------------------------------------------------");
+		System.out.println(ConsoleColors.YELLOW_BACKGROUND_FULL + "-------------------------------------------------------------------------------------------------" + ConsoleColors.RESET);
 
 		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
@@ -200,7 +235,7 @@ public class Board {
 			
 		}
 		
-		System.out.print("|||\t");
+		System.out.print(ConsoleColors.YELLOW_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
 		
 		for (int y = 6; y > 0; y--) {
 			
@@ -208,18 +243,18 @@ public class Board {
 			
 		}
 		
-		System.out.print("\n-------------------------------------------------------------------------------------------------\n");
+		System.out.print(ConsoleColors.YELLOW_BACKGROUND_FULL + "\n-------------------------------------------------------------------------------------------------\n");
 
 	}
 	
-	public static void main(String...args) {
+	/*public static void main(String...args) {
 		
 		Board b = new Board();
 		
 		b.printBoard();
 		
 		
-	}
+	}*/
 	
 	
 }
