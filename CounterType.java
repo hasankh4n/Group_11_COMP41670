@@ -1,9 +1,9 @@
 
 
 public enum CounterType {
-
-	PLAYER1("X"),
-	PLAYER2("O");
+	
+	PLAYER1(ConsoleColors.WHITE + "X"),
+	PLAYER2(ConsoleColors.RED + "O");
 	
 	private final String s;
 	
