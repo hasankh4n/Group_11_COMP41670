@@ -36,5 +36,11 @@ public class Point {
 		return counters;
 		
 	}
+
+		public Counter getSpecCounter(int idx) {
+		
+		return counters.get(idx);
+		
+	}
 	
 }
