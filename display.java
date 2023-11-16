@@ -18,9 +18,14 @@ public class display {
 
     public void info() {
         System.out.println("\n" + "Welcome to Backgammon");
-		System.out.println("\n" + "To play , use 'R' to roll the dice");
-        System.out.println("Enter 'Q' to quit!");
+        System.out.println("\n" + "Press 'H' to see valid commands!\n");
+		
 	}
+
+    public void hintInfo(){
+        System.out.println("\n" + "Enter 'R' to roll the dice");
+        System.out.println("Enter 'Q' to quit!\n");
+    }
 
     // Display the current state of the game board
 	//public void showBoard(board board) {

@@ -26,7 +26,9 @@ public class backgammon {
                     dice.roll();
                     dice.showFaces();
                 } 
-        
+                else if (command.hint()){
+                    display.hintInfo();
+                }
                 else {
                     display.displayCommandNotPossible();
                 }
