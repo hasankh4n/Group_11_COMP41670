@@ -34,26 +34,35 @@ public class Board {
 			
 			if (j == 0) {
 				
-				home1.add(new Point(5,counter1));
-				outer1.add(new Point(5,counter1));
+				home1.add(new Point(2,counter2));
 				home2.add(new Point(5,counter2));
+				outer1.add(new Point());
 				outer2.add(new Point(5,counter2));
+			}
+			
+			else if (j == 2) {
+				
+				home1.add(new Point());
+				home2.add(new Point());
+				outer1.add(new Point(3,counter2));
+				outer2.add(new Point());
+				
 			}
 			
 			else if (j == 4) {
 				
 				home1.add(new Point());
 				home2.add(new Point());
-				outer1.add(new Point(3,counter2));
+				outer1.add(new Point());
 				outer2.add(new Point(3,counter1));
 				
 			}
 			
 			else if (j == 5) {
 				
-				home1.add(new Point(2,counter2));
+				home1.add(new Point(5,counter1));
+				outer1.add(new Point(5,counter1));
 				home2.add(new Point(2,counter1));
-				outer1.add(new Point());
 				outer2.add(new Point());
 				
 			}
@@ -143,14 +152,14 @@ public class Board {
 
 		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-		for (int y = 13; y < 19; y++) {
+		for (int y = 2*QUAD_SIZE + 1; y <= NUM_POINTS - QUAD_SIZE; y++) {
 			
 			System.out.print(y + "\t");
 			
 		}
 		
 		System.out.print(ConsoleColors.RED_BACKGROUND + "   " + ConsoleColors.RESET + " \t");		
-		for (int y = 19; y < 25; y++) {
+		for (int y = (NUM_POINTS - QUAD_SIZE) + 1; y <= NUM_POINTS; y++) {
 			
 			System.out.print(y + "\t");
 			
@@ -158,13 +167,11 @@ public class Board {
 		
 		System.out.print(ConsoleColors.RED_BACKGROUND_FULL + "\n-------------------------------------------------------------------------------------------------\n" + ConsoleColors.RESET);
 		
-		for (int j = 0; j < 5; j++) {
+		for (int j = 0; j < POINT_SIZE; j++) {
 			
 			//PLAYER 2 OUTER PRINT
-			
-			int n = 0;
 
-			while (n < QUAD_SIZE) {
+			for (int n = 0; n < QUAD_SIZE; n++) {
 				
 				if ((outer2.get(n).getCounters().size()-1) < j) {
 					
@@ -178,16 +185,12 @@ public class Board {
 				
 				}
 				
-				n++;
-				
 			}
 
 			System.out.print(ConsoleColors.RED_BACKGROUND + "   " + ConsoleColors.RESET + " \t");			
 			//PLAYER 2 OUTER PRINT
 			
-			int p = 0;
-
-			while (p < QUAD_SIZE) {
+			for (int p = 0; p < QUAD_SIZE; p++) {
 				
 				if ((home2.get(p).getCounters().size()-1) < j) {
 					
@@ -201,8 +204,6 @@ public class Board {
 				
 				}
 				
-				p++;
-				
 			}
 			
 			System.out.print("\n");
@@ -215,9 +216,7 @@ public class Board {
 			
 			//PLAYER 1 OUTER PRINT
 			
-			int n = 0;
-
-			while (n < QUAD_SIZE) {
+			for (int n = QUAD_SIZE - 1;n >= 0; n--) {
 				
 				if ((outer1.get(n).getCounters().size()-1) < k) {
 					
@@ -230,18 +229,14 @@ public class Board {
 					System.out.print(outer1.get(n).getCounters().get(k) + "\t");
 				
 				}
-				
-				n++;
-				
+							
 			}
 			
 			System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
 			
 			//PLAYER 2 HOME PRINT
 			
-			int p = 0;
-
-			while (p < QUAD_SIZE) {
+			for (int p = QUAD_SIZE - 1;p >= 0; p--) {
 				
 				if ((home1.get(p).getCounters().size()-1) < k) {
 					
@@ -254,9 +249,7 @@ public class Board {
 					System.out.print(home1.get(p).getCounters().get(k) + "\t");
 				
 				}
-				
-				p++;
-				
+								
 			}
 			
 			System.out.print("\n");
@@ -264,8 +257,6 @@ public class Board {
 		}
 		
 		System.out.println(ConsoleColors.WHITE_BACKGROUND_FULL + "-------------------------------------------------------------------------------------------------" + ConsoleColors.RESET);
-
-		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 		for (int y = 12; y > 6; y--) {
 			
@@ -283,10 +274,41 @@ public class Board {
 		
 		System.out.print("\n");
 		
-		for (int i = 0; i < 6; i++) {
+		for (int i = 11; i > 5; i--) {
 			
 			int numCounters = 0;
-			int pipVal = 6 - i;
+			int pipVal = i + 1;
+			int pipNum = 0;
+			
+			//System.out.println(ConsoleColors.WHITE + "\n" + pointIndex.get(i).getCounters().size());
+			
+			for (int j = 0; j < POINT_SIZE; j++) {
+				
+				if (pointIndex.get(i).getCounters().size() - 1 >= j) {
+					
+					if (pointIndex.get(i).getSpecCounter(j).getType() == player1.getCounterType()) {
+						
+						numCounters++;
+							
+					}
+					
+				}
+				
+			}
+				
+			pipNum += numCounters * pipVal;
+			
+			System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+			
+		}
+		
+		System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
+
+		
+		for (int i = 5; i >= 0; i--) {
+			
+			int numCounters = 0;
+			int pipVal = i + 1;
 			int pipNum = 0;
 			
 			//System.out.println(ConsoleColors.WHITE + "\n" + pointIndex.get(i).getCounters().size());
