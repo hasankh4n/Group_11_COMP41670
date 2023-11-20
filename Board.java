@@ -1,14 +1,12 @@
 package BackgammonTest;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Stack;
 
 public class Board {
 
 	public final static int QUAD_SIZE = 6;
 	public final static int POINT_SIZE = 5;
 	public final static int NUM_POINTS = 24;
+	public final static String LONG_BORDER = "                                                                                                    ";
 
 	private ArrayList<Point> home1, outer1, home2, outer2;
 	public ArrayList<Point> pointIndex;
@@ -37,14 +35,14 @@ public class Board {
 				home1.add(new Point(2,counter2));
 				home2.add(new Point(5,counter2));
 				outer1.add(new Point());
-				outer2.add(new Point(5,counter2));
+				outer2.add(new Point(5,counter1));
 			}
 			
-			else if (j == 2) {
+			else if (j == 1) {
 				
 				home1.add(new Point());
 				home2.add(new Point());
-				outer1.add(new Point(3,counter2));
+				outer1.add(new Point(3,counter1));
 				outer2.add(new Point());
 				
 			}
@@ -54,14 +52,14 @@ public class Board {
 				home1.add(new Point());
 				home2.add(new Point());
 				outer1.add(new Point());
-				outer2.add(new Point(3,counter1));
+				outer2.add(new Point(3,counter2));
 				
 			}
 			
 			else if (j == 5) {
 				
 				home1.add(new Point(5,counter1));
-				outer1.add(new Point(5,counter1));
+				outer1.add(new Point(5,counter2));
 				home2.add(new Point(2,counter1));
 				outer2.add(new Point());
 				
@@ -110,9 +108,17 @@ public class Board {
 		
 	}
 	
-	public int getPipCount() {
+	public int getPipCount(Player p) {
 		
-		return 2;
+		int pipCount = 0;
+		
+		for (int i = 0; i < NUM_POINTS; i++) {
+			
+			pipCount += getPipNum(p, i, pointIndex);
+			
+		}
+		
+		return pipCount;
 		
 	}
 	
@@ -157,7 +163,7 @@ public class Board {
 		
 		int pipNum = 0;
 		
-		System.out.println(ConsoleColors.RED_BACKGROUND_FULL + "-------------------------------------------------------------------------------------------------" + ConsoleColors.RESET);
+		System.out.println(ConsoleColors.RED_BACKGROUND_FULL + "                                                                                                    " + ConsoleColors.RESET);
 		
 		for (int i = 12; i < 18; i++) {
 			
@@ -192,7 +198,7 @@ public class Board {
 			
 		}
 		
-		System.out.print(ConsoleColors.RED_BACKGROUND_FULL + "\n-------------------------------------------------------------------------------------------------\n" + ConsoleColors.RESET);
+		System.out.print(ConsoleColors.RED_BACKGROUND_FULL + "\n                                                                                                    \n" + ConsoleColors.RESET);
 		
 		for (int j = 0; j < POINT_SIZE; j++) {
 			
@@ -237,11 +243,13 @@ public class Board {
 						
 		}
 		
-		System.out.print(ConsoleColors.BLACK_BACKGROUND_FULL + "-------------------------------------------------------------------------------------------------\n" + ConsoleColors.RESET);
+		System.out.print(ConsoleColors.BLACK_BACKGROUND_FULL + "                                                                                                    \n" + ConsoleColors.RESET);
 
 		for (int k = 4; k >= 0; k--) {
 			
 			//PLAYER 1 OUTER PRINT
+			
+			System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
 			
 			for (int n = QUAD_SIZE - 1;n >= 0; n--) {
 				
@@ -267,24 +275,48 @@ public class Board {
 				
 				if ((home1.get(p).getCounters().size()-1) < k) {
 					
-					System.out.print(ConsoleColors.GREEN + "|" + "\t");
+					if (p > 0) {
+					
+						System.out.print(ConsoleColors.GREEN + "|" + "\t");
+					
+					}
+					
+					else {
+						
+						System.out.print(ConsoleColors.GREEN + "|" + " ");
+						
+					}
 					
 				}
 				
 				else {
 				
-					System.out.print(home1.get(p).getCounters().get(k) + "\t");
+					if (p > 0) {
+						
+						System.out.print(home1.get(p).getCounters().get(k) + "\t");
+					
+					}
+					
+					else {
+						
+						System.out.print(home1.get(p).getCounters().get(k) + " ");
+						
+					}
 				
 				}
 								
 			}
 			
+			System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+			
 			System.out.print("\n");
 						
 		}
 		
-		System.out.println(ConsoleColors.WHITE_BACKGROUND_FULL + "-------------------------------------------------------------------------------------------------" + ConsoleColors.RESET);
+		System.out.println(ConsoleColors.WHITE_BACKGROUND_FULL + LONG_BORDER + ConsoleColors.RESET);
 
+		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+		
 		for (int y = 12; y > 6; y--) {
 			
 			System.out.print(y + "\t");
@@ -295,11 +327,25 @@ public class Board {
 		
 		for (int y = 6; y > 0; y--) {
 			
+			if (y > 1) {
+			
 			System.out.print(y + "\t");
+			
+			}
+			
+			else {
+				
+				System.out.print("1 ");
+				
+			}
 			
 		}
 		
+		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+		
 		System.out.print("\n");
+		
+		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
 		
 		for (int i = 11; i > 5; i--) {
 			
@@ -311,17 +357,32 @@ public class Board {
 		
 		System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
 		
-		
+				
 		for (int i = 5; i >= 0; i--) {
 			
 			pipNum = getPipNum(player1, i, pointIndex);
 			
-			System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+			if (i > 0) {
+			
+				System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+			
+			}
+			
+			else {
+				
+				System.out.print(ConsoleColors.WHITE_BOLD + pipNum + " ");
+				
+			}
 			
 		}
 		
-		System.out.print(ConsoleColors.WHITE_BACKGROUND_FULL + "\n-------------------------------------------------------------------------------------------------\n" + ConsoleColors.RESET);
+		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
 		
+		System.out.print(ConsoleColors.WHITE_BACKGROUND_FULL + "\n" + LONG_BORDER + "\n" + ConsoleColors.RESET);
+		
+		int pipCount = getPipCount(player1);
+		
+		System.out.println("\n" + pipCount);
 		
 	}
 	
