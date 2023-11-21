@@ -76,6 +76,8 @@ public class Board {
 			
 		}
 		
+		//Put all points in single ArrayList
+		
 		pointIndex = home1;
 		pointIndex.addAll(outer1);
 		pointIndex.addAll(outer2);
@@ -85,12 +87,24 @@ public class Board {
 	
 	public int getPipNum(Player p, int idx, ArrayList <Point> pointIndex) {
 		
-		int numCounters = 0;
-		int pipVal = idx + 1;
 		int pipNum = 0;
+		int numCounters = 0;
+		int pipVal = 0;
 		
-		for (int j = 0; j < POINT_SIZE; j++) {
+		if (p == player1) {
+		
+			pipVal = idx + 1;
+			
+		}
+		
+		else if (p == player2) {
+			
+			pipVal = NUM_POINTS - idx;
+			
+		}
 				
+		for (int j = 0; j < POINT_SIZE; j++) {
+			
 			if (pointIndex.get(idx).getCounters().size() - 1 >= j) {
 								
 				if (pointIndex.get(idx).getSpecCounter(j).getType() == p.getCounterType()) {
@@ -159,51 +173,309 @@ public class Board {
 		
 	}
 	
-	public void printBoard() {
+	public void printTopNums(Player p) {
 		
 		int pipNum = 0;
 		
-		System.out.println(ConsoleColors.RED_BACKGROUND_FULL + "                                                                                                    " + ConsoleColors.RESET);
-		
-		for (int i = 12; i < 18; i++) {
+		if (p == player1) { //PRINT PLAYER2 HOME AND OUTER HEADER
 			
-			pipNum = getPipNum(player1, i, pointIndex);
+			System.out.println(ConsoleColors.RED_BACKGROUND + LONG_BORDER + ConsoleColors.RESET);
 			
-			System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+			//PRINT PIP VALUES
+
+			System.out.print(ConsoleColors.RED_BACKGROUND + "  " + ConsoleColors.RESET);
+						
+			for (int i = NUM_POINTS/2; i < NUM_POINTS; i++) {
+				
+				pipNum = getPipNum(p, i, pointIndex);
+				
+				if (i < NUM_POINTS - 1) {
+					
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+					
+				}
+					
+				else {
+						
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum);
+						
+				}
+				
+				if (i == NUM_POINTS - QUAD_SIZE - 1) {
+					
+					System.out.print(ConsoleColors.RED_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(ConsoleColors.RED_BACKGROUND + "  " + ConsoleColors.RESET);
+			
+			System.out.print("\n");
+			
+			//PRINT POINT NUMBERS
+			
+			System.out.print(ConsoleColors.RED_BACKGROUND + "  " + ConsoleColors.RESET);
+			
+			for (int y = 2*QUAD_SIZE + 1; y <= NUM_POINTS; y++) {
+				
+				if (y < 24) {
+					
+					System.out.print(y + "\t");
+					
+				}
+					
+				else {
+						
+					System.out.print("24");
+						
+				}
+				
+				if (y == NUM_POINTS - QUAD_SIZE) {
+					
+					System.out.print(ConsoleColors.RED_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(ConsoleColors.RED_BACKGROUND + "  " + ConsoleColors.RESET);
+			
+			System.out.print("\n");
+			
+			System.out.println(ConsoleColors.RED_BACKGROUND + LONG_BORDER + ConsoleColors.RESET);
+			
 			
 		}
 		
-		System.out.print(ConsoleColors.RED_BACKGROUND + "   " + ConsoleColors.RESET + " \t");			
+		else if (p == player2) { //PRINT PLAYER1 HOME AND OUTER HEADER
+			
+			System.out.println(ConsoleColors.WHITE_BACKGROUND + LONG_BORDER + ConsoleColors.RESET);
+			
+			//PRINT PIP NUMBERS
+			
+			System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+			
+			for (int i = 2*QUAD_SIZE - 1; i >= 0; i--) {
+				
+				pipNum = getPipNum(p, i, pointIndex);
+				
+				if (i > 0) {
+				
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+				
+				}
+				
+				else {
+					
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum + " ");
+					
+				}
+				
+				if (i == QUAD_SIZE) {
+					
+					System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+			
+			System.out.print("\n");
+			
+			//PRINT POINT NUMBERS
+			
+			System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+			
+			for (int y = 2*QUAD_SIZE; y > 0; y--) {
+				
+				if (y > 1) {
+				
+					System.out.print(y + "\t");
+				
+				}
+				
+				else {
+					
+					System.out.print("1 ");
+					
+				}
+				
+				if (y == QUAD_SIZE + 1) {
+					
+					System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+				
+			System.out.print("\n");
+			
+			System.out.println(ConsoleColors.WHITE_BACKGROUND + LONG_BORDER + ConsoleColors.RESET);
+		}
 		
-		for (int i = 18; i < 24; i++) {
+	}
+	
+	public void printBottomNums(Player p) { 
+		
+		int pipNum = 0;
+		
+		if (p == player1) { //PRINT PLAYER1 HOME AND OUTER HEADER
+		
+			System.out.println(p.getColour() + LONG_BORDER + ConsoleColors.RESET);
 			
-			pipNum = getPipNum(player1, i, pointIndex);
+			//PRINT POINT NUMBERS
 			
-			System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+			
+			for (int y = 2*QUAD_SIZE; y > 0; y--) {
+				
+				if (y > 1) {
+				
+					System.out.print(y + "\t");
+				
+				}
+				
+				else {
+					
+					System.out.print("1 ");
+					
+				}
+				
+				if (y == QUAD_SIZE + 1) {
+					
+					System.out.print(p.getColour() + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+			
+			System.out.print("\n");
+			
+			//PRINT PIP NUMBERS
+			
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+			
+			for (int i = 2*QUAD_SIZE - 1; i >= 0; i--) {
+				
+				pipNum = getPipNum(p, i, pointIndex);
+				
+				if (i > 0) {
+				
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+				
+				}
+				
+				else {
+					
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum + " ");
+					
+				}
+				
+				if (i == QUAD_SIZE) {
+					
+					System.out.print(p.getColour() + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+				
+			System.out.print("\n");
+			
+			System.out.println(p.getColour() + LONG_BORDER + ConsoleColors.RESET);
+		
+		}
+		
+		
+		else { //PRINT PLAYER2 HOME AND OUTER HEADER
+			
+			System.out.println(p.getColour() + LONG_BORDER + ConsoleColors.RESET);
+			
+			//PRINT POINT NUMBERS
+			
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+			
+			for (int y = 2*QUAD_SIZE + 1; y <= NUM_POINTS; y++) {
+				
+				if (y < 24) {
+					
+					System.out.print(y + "\t");
+					
+				}
+					
+				else {
+						
+					System.out.print("24");
+						
+				}
+				
+				if (y == NUM_POINTS - QUAD_SIZE) {
+					
+					System.out.print(p.getColour() + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+			
+			System.out.print("\n");
+			
+			//PRINT PIP VALUES
+
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+						
+			for (int i = NUM_POINTS/2; i < NUM_POINTS; i++) {
+				
+				pipNum = getPipNum(p, i, pointIndex);
+				
+				if (i < NUM_POINTS - 1) {
+					
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
+					
+				}
+					
+				else {
+						
+					System.out.print(ConsoleColors.WHITE_BOLD + pipNum + " ");
+						
+				}
+				
+				if (i == NUM_POINTS - QUAD_SIZE - 1) {
+					
+					System.out.print(p.getColour() + "   " + ConsoleColors.RESET + " \t");
+					
+				}
+				
+			}
+			
+			System.out.print(p.getColour() + "  " + ConsoleColors.RESET);
+			
+			System.out.print("\n");
+			
+			System.out.println(p.getColour() + LONG_BORDER + ConsoleColors.RESET);
 			
 		}
 		
-		System.out.print("\n");
+	}
+	
+	public void printBoard() {
 		
-		for (int y = 2*QUAD_SIZE + 1; y <= NUM_POINTS - QUAD_SIZE; y++) {
-			
-			System.out.print(y + "\t");
-			
-		}
-		
-		System.out.print(ConsoleColors.RED_BACKGROUND + "   " + ConsoleColors.RESET + " \t");		
-		for (int y = (NUM_POINTS - QUAD_SIZE) + 1; y <= NUM_POINTS; y++) {
-			
-			System.out.print(y + "\t");
-			
-		}
-		
-		System.out.print(ConsoleColors.RED_BACKGROUND_FULL + "\n                                                                                                    \n" + ConsoleColors.RESET);
-		
+		printTopNums(player2);
+				
 		for (int j = 0; j < POINT_SIZE; j++) {
 			
 			//PLAYER 2 OUTER PRINT
 
+			System.out.print(ConsoleColors.RED_BACKGROUND + "  " + ConsoleColors.RESET);
+			
 			for (int n = 0; n < QUAD_SIZE; n++) {
 				
 				if ((outer2.get(n).getCounters().size()-1) < j) {
@@ -238,6 +510,8 @@ public class Board {
 				}
 				
 			}
+			
+			System.out.print(ConsoleColors.RED_BACKGROUND + "  " + ConsoleColors.RESET);
 			
 			System.out.print("\n");
 						
@@ -313,74 +587,9 @@ public class Board {
 						
 		}
 		
-		System.out.println(ConsoleColors.WHITE_BACKGROUND_FULL + LONG_BORDER + ConsoleColors.RESET);
-
-		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
+		printBottomNums(player2);
 		
-		for (int y = 12; y > 6; y--) {
-			
-			System.out.print(y + "\t");
-			
-		}
-		
-		System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
-		
-		for (int y = 6; y > 0; y--) {
-			
-			if (y > 1) {
-			
-			System.out.print(y + "\t");
-			
-			}
-			
-			else {
-				
-				System.out.print("1 ");
-				
-			}
-			
-		}
-		
-		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
-		
-		System.out.print("\n");
-		
-		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
-		
-		for (int i = 11; i > 5; i--) {
-			
-			pipNum = getPipNum(player1, i, pointIndex);
-			
-			System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
-			
-		}
-		
-		System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
-		
-				
-		for (int i = 5; i >= 0; i--) {
-			
-			pipNum = getPipNum(player1, i, pointIndex);
-			
-			if (i > 0) {
-			
-				System.out.print(ConsoleColors.WHITE_BOLD + pipNum + "\t");
-			
-			}
-			
-			else {
-				
-				System.out.print(ConsoleColors.WHITE_BOLD + pipNum + " ");
-				
-			}
-			
-		}
-		
-		System.out.print(ConsoleColors.WHITE_BACKGROUND + "  " + ConsoleColors.RESET);
-		
-		System.out.print(ConsoleColors.WHITE_BACKGROUND_FULL + "\n" + LONG_BORDER + "\n" + ConsoleColors.RESET);
-		
-		int pipCount = getPipCount(player1);
+		int pipCount = getPipCount(player2);
 		
 		System.out.println("\n" + pipCount);
 		
