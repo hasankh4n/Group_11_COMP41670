@@ -319,6 +319,236 @@ public class Board {
 		
 	}
 	
+	public void printQuad(ArrayList<Point> quad, int j) {
+		
+		String borderColour = null;
+		
+		if (quad == outer1 || quad == home1) {
+			
+			borderColour = player1.getColour();
+			
+		}
+		
+		else {
+			
+			borderColour = player2.getColour();
+			
+		}
+		
+		if (quad == outer1) {
+			
+			//PLAYER 2 OUTER PRINT
+
+			System.out.print(borderColour + "  " + ConsoleColors.RESET);
+			
+			for (int n = QUAD_SIZE -1; n >= 0; n--) {
+				
+				if ((quad.get(n).getCounters().size()-1) < j) {
+					
+					System.out.print(ConsoleColors.GREEN + "|" + "\t");
+					
+				}
+				
+				else {
+				
+					System.out.print(quad.get(n).getCounters().get(j) + "\t");
+				
+				}
+				
+			}
+
+			System.out.print(borderColour + "   " + ConsoleColors.RESET + " \t");
+			
+		
+		
+		}
+		
+		else if (quad == outer2) {
+							
+				//PLAYER 2 OUTER PRINT
+
+				System.out.print(borderColour + "  " + ConsoleColors.RESET);
+				
+				for (int n = 0; n < QUAD_SIZE; n++) {
+					
+					if ((quad.get(n).getCounters().size()-1) < j) {
+						
+						System.out.print(ConsoleColors.GREEN + "|" + "\t");
+						
+					}
+					
+					else {
+					
+						System.out.print(quad.get(n).getCounters().get(j) + "\t");
+					
+					}
+					
+				}
+
+				System.out.print(borderColour + "   " + ConsoleColors.RESET + " \t");
+				
+			
+			
+		}
+		
+		else if (quad == home2){
+						
+				for (int k = 0; k < QUAD_SIZE; k++) {
+					
+					if ((quad.get(k).getCounters().size()-1) < j) {
+						
+						if (k < QUAD_SIZE - 1) {
+						
+							System.out.print(ConsoleColors.GREEN + "|" + "\t");
+						
+						}
+						
+						else {
+							
+							System.out.print(ConsoleColors.GREEN + "|" + " ");
+							
+						}
+					}
+					
+					else {
+					
+						if (k < QUAD_SIZE - 1) {
+							
+							System.out.print(quad.get(k).getCounters().get(j) + "\t");
+						
+						}
+						
+						else {
+							
+							System.out.print(quad.get(k).getCounters().get(j) + " ");
+							
+						}
+						
+					
+					}
+					
+				}
+				
+				System.out.print(borderColour + "  " + ConsoleColors.RESET);
+				
+				System.out.print("\n");
+				
+			
+			
+		}
+		
+		else {
+			
+			for (int k = QUAD_SIZE -1; k >= 0; k--) {
+				
+				if ((quad.get(k).getCounters().size()-1) < j) {
+					
+					if (k > 0) {
+					
+						System.out.print(ConsoleColors.GREEN + "|" + "\t");
+					
+					}
+					
+					else {
+						
+						System.out.print(ConsoleColors.GREEN + "|" + " ");
+						
+					}
+				}
+				
+				else {
+				
+					if (k > 0) {
+						
+						System.out.print(quad.get(k).getCounters().get(j) + "\t");
+					
+					}
+					
+					else {
+						
+						System.out.print(quad.get(k).getCounters().get(j) + " ");
+						
+					}
+					
+				
+				}
+				
+			}
+			
+			System.out.print(borderColour + "  " + ConsoleColors.RESET);
+			
+			System.out.print("\n");
+			
+		
+		
+	}
+		
+	}
+	
+	public void printQuads(Player p) {
+		
+		if (p == player1) {
+		
+			for (int j = 0; j < POINT_SIZE; j++) {
+				
+				//PLAYER 2 OUTER PRINT
+				
+				printQuad(outer2, j);
+				
+				//PLAYER 2 HOME PRINT
+				
+				printQuad(home2, j);
+				
+			}
+		
+			System.out.print(ConsoleColors.BLACK_BACKGROUND_FULL + LONG_BORDER + "\n" + ConsoleColors.RESET);
+			
+			for (int k = 4; k >= 0; k--) {
+				
+				//PLAYER 1 OUTER PRINT
+				
+				printQuad(outer1, k);
+				
+				//PLAYER 1 HOME PRINT
+				
+				printQuad(home1,k);
+						
+			}
+			
+		}
+		
+		else {
+			
+			for (int k = 0; k < POINT_SIZE; k++) {
+				
+				//PLAYER 1 OUTER PRINT
+				
+				printQuad(outer1, k);
+				
+				//PLAYER 1 HOME PRINT
+				
+				printQuad(home1,k);
+						
+			}
+			
+			System.out.print(ConsoleColors.BLACK_BACKGROUND_FULL + LONG_BORDER + "\n" + ConsoleColors.RESET);
+
+			for (int j = 4; j >= 0; j--) {
+				
+				//PLAYER 2 OUTER PRINT
+				
+				printQuad(outer2, j);
+				
+				//PLAYER 2 HOME PRINT
+				
+				printQuad(home2, j);
+				
+			}
+			
+		}
+		
+	}
+	
 	public void printBottomNums(Player p) { 
 		
 		int pipNum = 0;
@@ -468,9 +698,11 @@ public class Board {
 	
 	public void printBoard() {
 		
-		printTopNums(player2);
+		Player currentPlayer = player1;
+		
+		printTopNums(currentPlayer);
 				
-		for (int j = 0; j < POINT_SIZE; j++) {
+		/*for (int j = 0; j < POINT_SIZE; j++) {
 			
 			//PLAYER 2 OUTER PRINT
 
@@ -493,19 +725,40 @@ public class Board {
 			}
 
 			System.out.print(ConsoleColors.RED_BACKGROUND + "   " + ConsoleColors.RESET + " \t");			
-			//PLAYER 2 OUTER PRINT
+			
+			//PLAYER 2 HOME PRINT
 			
 			for (int p = 0; p < QUAD_SIZE; p++) {
 				
 				if ((home2.get(p).getCounters().size()-1) < j) {
 					
-					System.out.print(ConsoleColors.GREEN + "|" + "\t");
+					if (p < QUAD_SIZE - 1) {
 					
+						System.out.print(ConsoleColors.GREEN + "|" + "\t");
+					
+					}
+					
+					else {
+						
+						System.out.print(ConsoleColors.GREEN + "|" + " ");
+						
+					}
 				}
 				
 				else {
 				
-					System.out.print(home2.get(p).getCounters().get(j) + "\t");
+					if (p < QUAD_SIZE - 1) {
+						
+						System.out.print(home2.get(p).getCounters().get(j) + "\t");
+					
+					}
+					
+					else {
+						
+						System.out.print(home2.get(p).getCounters().get(j) + " ");
+						
+					}
+					
 				
 				}
 				
@@ -543,7 +796,7 @@ public class Board {
 			
 			System.out.print(ConsoleColors.WHITE_BACKGROUND + "   " + ConsoleColors.RESET + " \t");
 			
-			//PLAYER 2 HOME PRINT
+			//PLAYER 1 HOME PRINT
 			
 			for (int p = QUAD_SIZE - 1;p >= 0; p--) {
 				
@@ -585,11 +838,13 @@ public class Board {
 			
 			System.out.print("\n");
 						
-		}
+		}*/
 		
-		printBottomNums(player2);
+		printQuads(currentPlayer);
 		
-		int pipCount = getPipCount(player2);
+		printBottomNums(currentPlayer);
+		
+		int pipCount = getPipCount(currentPlayer);
 		
 		System.out.println("\n" + pipCount);
 		
