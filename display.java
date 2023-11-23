@@ -24,7 +24,8 @@ public class display {
 
     public void hintInfo(){
         System.out.println("\n" + "Enter 'R' to roll the dice");
-        System.out.println("Enter 'Q' to quit!\n");
+        System.out.println("Enter 'Q' to quit!");
+        System.out.println("Enter P to see pipcount for current player\n");
     }
 
     // Display the current state of the game board

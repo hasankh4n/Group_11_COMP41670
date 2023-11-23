@@ -29,6 +29,9 @@ public class backgammon {
                 else if (command.hint()){
                     display.hintInfo();
                 }
+                else if (command.getpip()){ // trying to add get pip val command
+                    board.getPipCount(null);
+                }
                 else {
                     display.displayCommandNotPossible();
                 }

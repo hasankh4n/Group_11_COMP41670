@@ -5,7 +5,7 @@
 
 public class command {
     
-    private enum CommandType {ROLL, QUIT, HINT};
+    private enum CommandType {ROLL, QUIT, HINT,GETPIP}; //added getpip 
     private CommandType commandtype;
 
     command(String command)
@@ -22,6 +22,9 @@ public class command {
             case "H":
                 commandtype = CommandType.HINT;
                 break;
+            case "P":
+                commandtype = CommandType.GETPIP; // added command type
+                break;
             default:
                 commandtype = CommandType.ROLL;
                 break;
@@ -33,7 +36,7 @@ public class command {
     {
 		String commandFormatted = command.toUpperCase();//valid input regardless of input case
 		return  commandFormatted.equals("Q") || commandFormatted.equals("R") || commandFormatted.equals("H") ||
-        commandFormatted.matches("R[1-6]Q[1-6]H[1-6]");
+        commandFormatted.equals("P") ||commandFormatted.matches("R[1-6]Q[1-6]H[1-6]");
 	}		
 
     //User Input related methods
@@ -47,6 +50,10 @@ public class command {
 
     public boolean hint(){
         return commandtype == CommandType.HINT;
+    }
+
+    public boolean getpip(){
+        return commandtype == CommandType.GETPIP;
     }
 
 
