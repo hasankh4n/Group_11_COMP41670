@@ -395,7 +395,7 @@ public class Board {
 					
 					moveFrom = pointIndex.get(pointFromIdx);
 					
-					if (canBearOff(p) && pointToIdx < 0) {
+					if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 						
 						Counter replaceCounter = new Counter(p.getCounterType());
 						
@@ -417,7 +417,7 @@ public class Board {
 														
 								if (topCounter.getType() == p.getCounterType()) {
 									
-									if (canBearOff(p) && pointToIdx < 0) {
+									if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 										
 										secondPossible = true;
 																				
@@ -431,7 +431,7 @@ public class Board {
 																		
 									}
 									
-									else if (!(pointToIdx < 0)){
+									else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 										
 										moveTo = pointIndex.get(pointToIdx);
 										
@@ -461,7 +461,7 @@ public class Board {
 						
 					}
 					
-					else if (!(pointToIdx < 0)){
+					else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 						
 						moveTo = pointIndex.get(pointToIdx);
 							
@@ -485,7 +485,7 @@ public class Board {
 															
 									if (topCounter.getType() == p.getCounterType()) {
 										
-										if (canBearOff(p) && pointToIdx < 0) {
+										if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 											
 											secondPossible = true;
 																						
@@ -499,7 +499,7 @@ public class Board {
 																				
 										}
 										
-										else if (!(pointToIdx < 0)){
+										else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 											
 											moveTo = pointIndex.get(pointToIdx);
 			
@@ -558,7 +558,7 @@ public class Board {
 					
 					moveFrom = pointIndex.get(pointFromIdx);
 					
-					if (canBearOff(p) && pointToIdx < 0) {
+					if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 						
 						Counter replaceCounter = new Counter(p.getCounterType());
 						
@@ -582,7 +582,7 @@ public class Board {
 														
 								if (topCounter.getType() == p.getCounterType()) {
 																		
-									if (canBearOff(p) && pointToIdx < 0) {
+									if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 										
 										secondPossible = true;
 																		
@@ -596,7 +596,7 @@ public class Board {
 										
 									}
 									
-									else if (!(pointToIdx < 0)){
+									else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 										
 										moveTo = pointIndex.get(pointToIdx);
 										
@@ -626,7 +626,7 @@ public class Board {
 						
 					}
 					
-					else if (!(pointToIdx < 0)){
+					else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 						
 						moveTo = pointIndex.get(pointToIdx);
 						
@@ -651,7 +651,7 @@ public class Board {
 																
 									if (topCounter.getType() == p.getCounterType()) {
 										
-										if (canBearOff(p) && pointToIdx < 0) {
+										if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 											
 											secondPossible = true;
 																				
@@ -665,7 +665,7 @@ public class Board {
 											
 										}
 										
-										else if (!(pointToIdx < 0)){
+										else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 											
 											moveTo = pointIndex.get(pointToIdx);
 											
