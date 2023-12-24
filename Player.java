@@ -1,22 +1,29 @@
+package BackgammonTest;
 
 public class Player {
 
 	private CounterType ctype;
 	private String colour;
+	private int number;
+	private String name;
 	
 	Player (int playerNumber) {
 		
 		if (playerNumber == 1) {
 			
+			number = 1;
 			ctype = CounterType.PLAYER1;
-			colour = ConsoleColors.RED_BACKGROUND;
+			colour = ConsoleColors.WHITE_BACKGROUND;
+			name = null;
 			
 		}
 		
 		else if (playerNumber == 2) {
 			
+			number = 2;
 			ctype = CounterType.PLAYER2;
-			colour = ConsoleColors.WHITE_BACKGROUND;
+			colour = ConsoleColors.RED_BACKGROUND;
+			name = null;
 			
 		}
 		
@@ -29,15 +36,33 @@ public class Player {
 		
 	}
 	
+	public int getPlayerNumber() {
+		
+		return number;
+		
+	}
+	
 	public CounterType getCounterType() {
 		
 		return ctype;
 		
 	}
 	
-public String getColour() {
+	public String getColour() {
 		
 		return colour;
+		
+	}
+	
+	public String getPlayerName() {
+		
+		return name;
+		
+	}
+	
+	public void setPlayerName(String n) {
+		
+		name = n;
 		
 	}
 	
