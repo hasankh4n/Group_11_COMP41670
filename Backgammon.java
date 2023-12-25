@@ -1,4 +1,4 @@
-package BackgammonTest;
+package backgammonGroup11;
 
 /**
  * Group Number: 11
