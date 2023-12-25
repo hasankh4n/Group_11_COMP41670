@@ -1,5 +1,12 @@
 package BackgammonTest;
 
+/**
+ * Group Number: 11
+ * @author James Duke, Hasan Khan
+ * GitHub IDs: jamesduke488, hasankh4n
+ * @version 1.1
+ */
+
 public class Score {
 
 	private int p1Score, p2Score;
