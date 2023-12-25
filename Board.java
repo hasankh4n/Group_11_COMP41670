@@ -1,4 +1,4 @@
-package BackgammonTest;
+package backgammonGroup11;
 import java.util.ArrayList;
 import java.util.Stack;
 
