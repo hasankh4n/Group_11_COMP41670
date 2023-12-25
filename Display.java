@@ -1,9 +1,11 @@
 package BackgammonTest;
 
-//Name: display
-//Author: 
-//Version: 1.0
-//About: File detailing the logic behind displaying the board to user and text outputs
+/**
+ * Group Number: 11
+ * @author James Duke, Hasan Khan
+ * GitHub IDs: jamesduke488, hasankh4n
+ * @version 1.1
+ */
 
 import java.util.Scanner;
 
