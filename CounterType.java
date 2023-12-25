@@ -1,3 +1,5 @@
+package backgammonGroup11;
+
 /**
  * Group Number: 11
  * @author James Duke, Hasan Khan
