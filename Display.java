@@ -127,25 +127,11 @@ public class Display {
 	  
   }
   
-  public boolean offerDouble(Player currentPlayer) {
+  public void offerDouble(Player currentPlayer) {
 	  
-	  System.out.println(currentPlayer.getPlayerName() + " has offered a double. Would you like to accept?");
+	  System.out.println("\n" + currentPlayer.getPlayerName() + " has offered a double. Would you like to accept?\n");
 	  
-	  System.out.println("Enter 'Y' to accept or any other input to decline: ");
-	  
-	  String userInput = in.nextLine();
-	  
-	  if (userInput.equals("Y") || userInput.equals("y")) {
-			
-			return true;
-			
-		}
-		
-		else {
-			
-			return false;
-			
-		}
+	  System.out.println("\nEnter 'Y' to accept or 'N' to decline: \n");
 	  
   }
   
@@ -156,6 +142,9 @@ public class Display {
 		
 		do {
 			System.out.print("Please enter command: ");
+			
+			
+			
 			String userInput = in.nextLine();
 			
 			if (Command.isValid(userInput)) {

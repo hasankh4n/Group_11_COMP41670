@@ -5,7 +5,7 @@ public class Score {
 	private int p1Score, p2Score;
 	private int matchLength;
 	private int stake;
-	private Player cubeOwner = new Player(1);
+	private Player cubeOwner = null;
 	
 	Score() {
 		
@@ -41,25 +41,40 @@ public class Score {
 	
 	public boolean canOfferDouble(Player currentPlayer) {
 		
-		if (currentPlayer == cubeOwner) {
+		if (cubeOwner == null) {
+			
+			cubeOwner = currentPlayer;
 			
 			return true;
 			
 		}
 		
 		else {
-						
-			return false;
+			
+			if (currentPlayer == cubeOwner) {
+				
+				return true;
+				
+			}
+			
+			else {
+							
+				return false;
+				
+			}
 			
 		}
+		
+		
 		
 	}
 	
 	public void doubleAccepted(Player p1, Player p2) {
 			
 		System.out.println("The stakes have been doubled!");
-		
+					
 		stake = stake*2;
+				
 		
 		//Change the doubling cube owner
 		
@@ -80,6 +95,23 @@ public class Score {
 	public Player getCubeOwner() {
 		
 		return cubeOwner;
+		
+	}
+	
+	public int getStake() {
+		
+		if (stake == 1) {
+			
+			return 64;
+			
+		}
+		
+		else {
+			
+			return stake;
+			
+		}
+		
 		
 	}
 	

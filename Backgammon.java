@@ -27,6 +27,10 @@ public class Backgammon {
 	            display.getMatchLength(board.getScore()); //Get players to choose a match length
 		        
 		        boolean isMatchOver = false; //Check to see if someone has won the match
+		        
+		        boolean madeRoll = false;
+		        
+		        boolean doubleRefused = false;
 	            
 	            do {
 	            
@@ -65,12 +69,73 @@ public class Backgammon {
 			                
 			                else if (command.roll())
 			                {
-			                    
 			                	dice.roll();
 			                	
-			                	board.showLegalMoves(dice, currentPlayer);
-			                    
+			                	if (board.LegalMoves(dice, currentPlayer) == null) {
+			                		
+			                		commandIn = true;
+			                		
+			                	}
+			                	
+			                	else {
+			                		
+			                		board.showLegalMoves(dice, currentPlayer);
+				                    
+				                	madeRoll = true;
+			                		
+			                	}
+			                	
+			                	
 			                } 
+			            	
+			                else if (command.rollspec()) {
+			                	
+			                	int[] faces = new int[2];
+			                	
+			                	faces[0] = Integer.valueOf(command.getRollNums()[0]);
+			                	faces[1] = Integer.valueOf(command.getRollNums()[1]);
+
+			                	System.out.println(faces[0] + faces[1]);
+			                	
+			                	dice.setFaces(faces[0], faces[1]);
+			                	
+			                	dice.showFaces();
+			                	
+			                	if (board.LegalMoves(dice, currentPlayer) == null) {
+			                		
+			                		commandIn = true;
+			                		
+			                	}
+			                	
+			                	else {
+			                		
+			                		board.showLegalMoves(dice, currentPlayer);
+				                    
+				                	madeRoll = true;
+			                		
+			                	}
+			                	
+			                }
+			            	
+			                else if (command.move()) {
+			                	
+			                	if (madeRoll) {
+			                		
+			                		int moveNum = command.getMoveNum();
+				                	
+				                	board.makeMove(moveNum, board.LegalMoves(dice, currentPlayer));
+				                	
+				                	commandIn = true;
+			                		
+			                	}
+			                	
+			                	else {
+			                		
+			                		System.out.println("Need to roll first");
+			                		
+			                	}
+			                	
+			                }
 			                
 			                else if (command.pip()) {
 			                	
@@ -88,19 +153,46 @@ public class Backgammon {
 			                	
 			                	if (board.getScore().canOfferDouble(currentPlayer)) {
 			                		
-			                		if (display.offerDouble(currentPlayer)) {
-			                			
-			                			board.getScore().doubleAccepted(player1, player2);
-			                			
-			                		}
+			                		display.offerDouble(currentPlayer);
 			                		
-			                		else {
-			                			
-			                			commandIn = true;
-			                			
-			                		}
+			                		Scanner in = new Scanner(System.in);
+			                					                		  
+			                		boolean validResponse = false;
 			                		
+			                		do {
+			                			
+				                		String userInput = in.nextLine();
+
+				                		if (userInput.equals("Y") || userInput.equals("y")) {
+			                				
+				                			 board.getScore().doubleAccepted(player1, player2);	
+				                			 
+				                			 validResponse = true;
+				                			 
+				                		}
+				                			
+				                		else if (userInput.equals("N") || userInput.equals("n")) {
+				                				
+				                			validResponse = true;
+				                			
+				                			doubleRefused = true;
+				                			
+				                			commandIn = true;
+				                				
+				                		}
+				                		
+				                		else {
+				                			
+				                			System.out.println("\nPlease enter a valid response\n");
+				                			
+				                		}
+			                			
+			                		} while (validResponse == false);
+			                					                		
+			                		
+			                	
 			                	}
+			                	
 			                	
 			                }
 			        
@@ -126,7 +218,7 @@ public class Backgammon {
 				            	
 				        }
 			            
-			        } while (!command.quit() && !board.isGameOver(player1, player2) && (!command.offerdouble() && !display.offerDouble(currentPlayer))); //Game continues with players making turns until either someone quits or the game is over and someone wins
+			        } while (!command.quit() && !board.isGameOver(player1, player2) && (!command.offerdouble() && !doubleRefused)); //Game continues with players making turns until either someone quits or the game is over and someone wins
 			        
 			        //Decide winner
 			        Player winner = new Player(1);

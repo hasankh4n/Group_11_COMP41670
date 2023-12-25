@@ -250,19 +250,35 @@ public class Board {
 	
 	public String[] LegalMoves(Dice dice, Player p) {
 				
-		//Initialise array to store allowed moves
+		//Initialise string arrays to store allowed moves for player is able to move 1-4 times, used for printing
 		String[] movesAllowed = new String[99];
-		int nextIdx = 0; 
+		movesAllowed = null;
+		String[] oneMoveAllowed = new String[99];
+		String[] twoMovesAllowed = new String[99];
+		String[] threeMovesAllowed = new String[99];
+		String[] fourMovesAllowed = new String[99];
+
+		//Initialise int arrays to store same moves in integer format so player can make move
+		/*int[] oneMoveAllowedInt = new int[99];
+		int[] twoMovesAllowedInt = new int[99];
+		int[] threeMovesAllowedInt = new int[99];
+		int[] fourMovesAllowedInt = new int[99];*/
+		
+		//Initialise indexes to store moves
+		int firstIdx = 0;
+		int secondIdx = 0;
+		int thirdIdx = 0;
+		int fourthIdx = 0;
 		
 		Player currentPlayer = p;
 		
 		int toPlay[] = new int[2]; //Array to store dice faces
-		
-		int numMoves = 2;
-		
+				
 		//Boolean checks for at least one possible move with either both dice or just one
 		boolean firstPossible = false; 
 		boolean secondPossible = false;
+		boolean thirdPossible = false;
+		boolean fourthPossible = false;
 		
 		dice.roll();
 		
@@ -270,22 +286,17 @@ public class Board {
 		
 		int largerVal = toPlay[0];
 		int smallerVal = toPlay[1];
-		
-		if (p.getPlayerNumber() == 2) {
-			
-			largerVal = 0 - toPlay[0];
-			smallerVal = 0 - toPlay[1];
-			
-		}
-		
-		System.out.println(largerVal);
-		
+				
 		String firstMoveLarger = null;
 		String firstMoveSmaller = null;
 		String secondMove = null;
+		String thirdMove = null;
+		String fourthMove = null;
 		String newMove = null;
+		String newTwoMove = null;
+		String newThreeMove = null;
 		
-		//Check to see if player 1 has had any counters hit
+		//Check to see if player 1 has had any counters hit (Not finished)
 	
 		
 		if (p.getPlayerNumber() == 1 && !bar1.getCounters().isEmpty()) {
@@ -305,9 +316,19 @@ public class Board {
 		//Check to see if dice values are equal
 		if (toPlay[0] == toPlay[1]) {
 			
-			int maxMoves = 0;
+			ArrayList<Point> ogPointIndex = (ArrayList<Point>) pointIndex.clone();
 			
+			int moveVal = toPlay[0];
 			
+			if (p.getPlayerNumber() == 2) {
+				
+				moveVal = 0 - moveVal;
+				
+			}
+
+			/*1**************************************************************************/
+			
+			//Check possible moves with first dice
 			for (int i = 0; i < 24; i++) {
 				
 				Counter topCounter = null;
@@ -317,7 +338,7 @@ public class Board {
 					topCounter = pointIndex.get(i).getCounters().peek();
 				
 					int pointFromIdx = i;
-					int pointToIdx = i - toPlay[0];
+					int pointToIdx = i - moveVal;
 					
 					Point moveTo = new Point();
 					
@@ -328,20 +349,442 @@ public class Board {
 						moveFrom = pointIndex.get(pointFromIdx);
 						
 						if (canBearOff(p) && pointToIdx < 0) {
-							
-							Counter replaceCounter = new Counter(p.getCounterType());
-							
+														
 							firstPossible = true;
 							
 							moveFrom.getCounters().pop();
 							
 							firstMoveLarger = pointFromIdx + 1 + "-OFF";
 							
-							moveFrom.getCounters().push(replaceCounter);
+							oneMoveAllowed[firstIdx] = firstMoveLarger;
+							
+							firstIdx++;
+										
+							/*2**************************************************************************/
+							
+							//Check possible moves with second dice
+							for (int j = 0; j < 24; j++) {
+								
+								if (!pointIndex.get(j).getCounters().isEmpty()) {
+									
+									topCounter = pointIndex.get(j).getCounters().peek();
+								
+									pointFromIdx = j;
+									pointToIdx = j - smallerVal;
+															
+									if (topCounter.getType() == p.getCounterType()) {
+										
+										moveFrom = pointIndex.get(pointFromIdx);
+										
+										if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+											
+											secondPossible = true;
+												
+											moveFrom.getCounters().pop();
+											
+											secondMove = pointFromIdx + 1 + "-OFF";
+											
+											newTwoMove = firstMoveLarger + " " + secondMove;
+											
+											twoMovesAllowed[secondIdx] = newTwoMove;
+											
+											secondIdx++;
+												
+											/*3**************************************************************************/
+											
+											//Check possible moves with third dice
+											for (int k = 0; k < 24; k++) {
+												
+												if (!pointIndex.get(k).getCounters().isEmpty()) {
+													
+													topCounter = pointIndex.get(k).getCounters().peek();
+												
+													pointFromIdx = k;
+													pointToIdx = k - smallerVal;
+																			
+													if (topCounter.getType() == p.getCounterType()) {
+														
+														moveFrom = pointIndex.get(pointFromIdx);
+														
+														if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+															
+															thirdPossible = true;
+																
+															moveFrom.getCounters().pop();
+															
+															thirdMove = pointFromIdx + 1 + "-OFF";
+															
+															newThreeMove = newTwoMove + " " + thirdMove;
+															
+															threeMovesAllowed[thirdIdx] = newThreeMove;
+															
+															thirdIdx++;
+															
+															/*4**************************************************************************/
+															
+															//Check possible moves with fourth dice
+															for (int l = 0; l < 24; l++) {
+																
+																if (!pointIndex.get(l).getCounters().isEmpty()) {
+																	
+																	topCounter = pointIndex.get(l).getCounters().peek();
+																
+																	pointFromIdx = l;
+																	pointToIdx = l - smallerVal;
+																							
+																	if (topCounter.getType() == p.getCounterType()) {
+																		
+																		moveFrom = pointIndex.get(pointFromIdx);
+																		
+																		if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																			
+																			fourthPossible = true;
+																																										
+																			fourthMove = pointFromIdx + 1 + "-OFF";
+																			
+																			newMove = newThreeMove + " " + fourthMove;
+																			
+																			fourMovesAllowed[fourthIdx] = newMove;
+																			
+																			fourthIdx++;
+																											
+																		}
+																		
+																		else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																			
+																			moveTo = pointIndex.get(pointToIdx);
+																			
+																			if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																			
+																				fourthPossible = true;
+																																											
+																				fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																				
+																				newMove = newThreeMove + " " + fourthMove;
+																				
+																				fourMovesAllowed[thirdIdx] = newMove;
+																				
+																				fourthIdx++;
+																											
+																			}
+																			
+																		}
+																		
+																	}
+																
+																}
+																
+															}
+															
+															/*4**************************************************************************/
+																							
+														}
+														
+														else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+															
+															moveTo = pointIndex.get(pointToIdx);
+															
+															if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+															
+																thirdPossible = true;
+																
+																moveTo.getCounters().push(moveFrom.getCounters().pop());
+																
+																thirdMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																
+																newThreeMove = newTwoMove + " " + thirdMove;
+																
+																threeMovesAllowed[thirdIdx] = newThreeMove;
+																
+																thirdIdx++;
+																
+																/*4**************************************************************************/
+																
+																//Check possible moves with fourth dice
+																for (int l = 0; l < 24; l++) {
+																	
+																	if (!pointIndex.get(l).getCounters().isEmpty()) {
+																		
+																		topCounter = pointIndex.get(l).getCounters().peek();
+																	
+																		pointFromIdx = l;
+																		pointToIdx = l - smallerVal;
+																								
+																		if (topCounter.getType() == p.getCounterType()) {
+																			
+																			moveFrom = pointIndex.get(pointFromIdx);
+																			
+																			if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																				
+																				fourthPossible = true;
+																																											
+																				fourthMove = pointFromIdx + 1 + "-OFF";
+																				
+																				newMove = newThreeMove + " " + fourthMove;
+																				
+																				fourMovesAllowed[fourthIdx] = newMove;
+																				
+																				fourthIdx++;
+																												
+																			}
+																			
+																			else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																				
+																				moveTo = pointIndex.get(pointToIdx);
+																				
+																				if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																				
+																					fourthPossible = true;
+																																												
+																					fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																					
+																					newMove = newThreeMove + " " + fourthMove;
+																					
+																					fourMovesAllowed[thirdIdx] = newMove;
+																					
+																					fourthIdx++;
+																												
+																				}
+																				
+																			}
+																			
+																		}
+																	
+																	}
+																	
+																}
+																
+																/*4**************************************************************************/
+																							
+															}
+															
+														}
+														
+													}
+												
+												}
+												
+											}
+											
+											/*3**************************************************************************/
+											
+										}
+										
+										/*2**************************************************************************/
+										
+										else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+											
+											moveTo = pointIndex.get(pointToIdx);
+											
+											if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+											
+												secondPossible = true;
+												
+												moveTo.getCounters().push(moveFrom.getCounters().pop());
+												
+												secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+												
+												newTwoMove = firstMoveLarger + " " + secondMove;
+												
+												twoMovesAllowed[secondIdx] = newTwoMove;
+												
+												secondIdx++;
+												
+												/*3**************************************************************************/
+												
+												//Check possible moves with third dice
+												for (int k = 0; k < 24; k++) {
+													
+													if (!pointIndex.get(k).getCounters().isEmpty()) {
+														
+														topCounter = pointIndex.get(k).getCounters().peek();
+													
+														pointFromIdx = k;
+														pointToIdx = k - smallerVal;
+																				
+														if (topCounter.getType() == p.getCounterType()) {
+															
+															moveFrom = pointIndex.get(pointFromIdx);
+															
+															if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																
+																thirdPossible = true;
+																	
+																moveFrom.getCounters().pop();
+																
+																thirdMove = pointFromIdx + 1 + "-OFF";
+																
+																newThreeMove = newTwoMove + " " + thirdMove;
+																
+																threeMovesAllowed[thirdIdx] = newThreeMove;
+																
+																thirdIdx++;
+																
+																/*4**************************************************************************/
+																
+																//Check possible moves with fourth dice
+																for (int l = 0; l < 24; l++) {
+																	
+																	if (!pointIndex.get(l).getCounters().isEmpty()) {
+																		
+																		topCounter = pointIndex.get(l).getCounters().peek();
+																	
+																		pointFromIdx = l;
+																		pointToIdx = l - smallerVal;
+																								
+																		if (topCounter.getType() == p.getCounterType()) {
+																			
+																			moveFrom = pointIndex.get(pointFromIdx);
+																			
+																			if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																				
+																				fourthPossible = true;
+																																											
+																				fourthMove = pointFromIdx + 1 + "-OFF";
+																				
+																				newMove = newThreeMove + " " + fourthMove;
+																				
+																				fourMovesAllowed[fourthIdx] = newMove;
+																				
+																				fourthIdx++;
+																												
+																			}
+																			
+																			else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																				
+																				moveTo = pointIndex.get(pointToIdx);
+																				
+																				if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																				
+																					fourthPossible = true;
+																																												
+																					fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																					
+																					newMove = newThreeMove + " " + fourthMove;
+																					
+																					fourMovesAllowed[thirdIdx] = newMove;
+																					
+																					fourthIdx++;
+																												
+																				}
+																				
+																			}
+																			
+																		}
+																	
+																	}
+																	
+																}
+																
+																/*4**************************************************************************/
+																								
+															}
+															
+															else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																
+																moveTo = pointIndex.get(pointToIdx);
+																
+																if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																
+																	thirdPossible = true;
+																	
+																	moveTo.getCounters().push(moveFrom.getCounters().pop());
+																	
+																	thirdMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																	
+																	newThreeMove = newTwoMove + " " + thirdMove;
+																	
+																	threeMovesAllowed[thirdIdx] = newThreeMove;
+																	
+																	thirdIdx++;
+																	
+																	/*4**************************************************************************/
+																	
+																	//Check possible moves with fourth dice
+																	for (int l = 0; l < 24; l++) {
+																		
+																		if (!pointIndex.get(l).getCounters().isEmpty()) {
+																			
+																			topCounter = pointIndex.get(l).getCounters().peek();
+																		
+																			pointFromIdx = l;
+																			pointToIdx = l - smallerVal;
+																									
+																			if (topCounter.getType() == p.getCounterType()) {
+																				
+																				moveFrom = pointIndex.get(pointFromIdx);
+																				
+																				if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																					
+																					fourthPossible = true;
+																																												
+																					fourthMove = pointFromIdx + 1 + "-OFF";
+																					
+																					newMove = newThreeMove + " " + fourthMove;
+																					
+																					fourMovesAllowed[fourthIdx] = newMove;
+																					
+																					fourthIdx++;
+																													
+																				}
+																				
+																				else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																					
+																					moveTo = pointIndex.get(pointToIdx);
+																					
+																					if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																					
+																						fourthPossible = true;
+																																													
+																						fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																						
+																						newMove = newThreeMove + " " + fourthMove;
+																						
+																						fourMovesAllowed[thirdIdx] = newMove;
+																						
+																						fourthIdx++;
+																													
+																					}
+																					
+																				}
+																				
+																			}
+																		
+																		}
+																		
+																	}
+																	
+																	/*4**************************************************************************/
+																								
+																}
+																
+															}
+															
+														}
+													
+													}
+													
+												}
+												
+												/*3**************************************************************************/
+																			
+											}
+											
+										}
+										
+										/*2**************************************************************************/
+										
+									}
+								
+								}
+								
+							}
 							
 						}
 						
-						else {
+						/*1**************************************************************************/
+						
+						else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)) {
 							
 							moveTo = pointIndex.get(pointToIdx);
 								
@@ -352,8 +795,424 @@ public class Board {
 								moveTo.getCounters().push(moveFrom.getCounters().pop());
 															
 								firstMoveLarger = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																							
+								/*2**************************************************************************/
+								
+								//Check possible moves with second dice
+								for (int j = 0; j < 24; j++) {
+									
+									if (!pointIndex.get(j).getCounters().isEmpty()) {
+										
+										topCounter = pointIndex.get(j).getCounters().peek();
+									
+										pointFromIdx = j;
+										pointToIdx = j - smallerVal;
+																
+										if (topCounter.getType() == p.getCounterType()) {
+											
+											moveFrom = pointIndex.get(pointFromIdx);
+											
+											if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+												
+												secondPossible = true;
+													
+												moveFrom.getCounters().pop();
+												
+												secondMove = pointFromIdx + 1 + "-OFF";
+												
+												newMove = firstMoveLarger + " " + secondMove;
+												
+												twoMovesAllowed[secondIdx] = newMove;
+												
+												secondIdx++;
+												
+												/*3**************************************************************************/
+												
+												//Check possible moves with third dice
+												for (int k = 0; k < 24; k++) {
+													
+													if (!pointIndex.get(k).getCounters().isEmpty()) {
+														
+														topCounter = pointIndex.get(k).getCounters().peek();
+													
+														pointFromIdx = k;
+														pointToIdx = k - smallerVal;
+																				
+														if (topCounter.getType() == p.getCounterType()) {
 															
-								moveFrom.getCounters().push(pointIndex.get(pointToIdx).getCounters().pop());
+															moveFrom = pointIndex.get(pointFromIdx);
+															
+															if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																
+																thirdPossible = true;
+																	
+																moveFrom.getCounters().pop();
+																
+																thirdMove = pointFromIdx + 1 + "-OFF";
+																
+																newThreeMove = newTwoMove + " " + thirdMove;
+																
+																threeMovesAllowed[thirdIdx] = newThreeMove;
+																
+																thirdIdx++;
+																
+																/*4**************************************************************************/
+																
+																//Check possible moves with fourth dice
+																for (int l = 0; l < 24; l++) {
+																	
+																	if (!pointIndex.get(l).getCounters().isEmpty()) {
+																		
+																		topCounter = pointIndex.get(l).getCounters().peek();
+																	
+																		pointFromIdx = l;
+																		pointToIdx = l - smallerVal;
+																								
+																		if (topCounter.getType() == p.getCounterType()) {
+																			
+																			moveFrom = pointIndex.get(pointFromIdx);
+																			
+																			if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																				
+																				fourthPossible = true;
+																																											
+																				fourthMove = pointFromIdx + 1 + "-OFF";
+																				
+																				newMove = newThreeMove + " " + fourthMove;
+																				
+																				fourMovesAllowed[fourthIdx] = newMove;
+																				
+																				fourthIdx++;
+																												
+																			}
+																			
+																			else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																				
+																				moveTo = pointIndex.get(pointToIdx);
+																				
+																				if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																				
+																					fourthPossible = true;
+																																												
+																					fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																					
+																					newMove = newThreeMove + " " + fourthMove;
+																					
+																					fourMovesAllowed[thirdIdx] = newMove;
+																					
+																					fourthIdx++;
+																												
+																				}
+																				
+																			}
+																			
+																		}
+																	
+																	}
+																	
+																}
+																
+																/*4**************************************************************************/
+																								
+															}
+															
+															else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																
+																moveTo = pointIndex.get(pointToIdx);
+																
+																if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																
+																	thirdPossible = true;
+																	
+																	moveTo.getCounters().push(moveFrom.getCounters().pop());
+																	
+																	thirdMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																	
+																	newThreeMove = newTwoMove + " " + thirdMove;
+																	
+																	threeMovesAllowed[thirdIdx] = newThreeMove;
+																	
+																	thirdIdx++;
+																	
+																	/*4**************************************************************************/
+																	
+																	//Check possible moves with fourth dice
+																	for (int l = 0; l < 24; l++) {
+																		
+																		if (!pointIndex.get(l).getCounters().isEmpty()) {
+																			
+																			topCounter = pointIndex.get(l).getCounters().peek();
+																		
+																			pointFromIdx = l;
+																			pointToIdx = l - smallerVal;
+																									
+																			if (topCounter.getType() == p.getCounterType()) {
+																				
+																				moveFrom = pointIndex.get(pointFromIdx);
+																				
+																				if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																					
+																					fourthPossible = true;
+																																												
+																					fourthMove = pointFromIdx + 1 + "-OFF";
+																					
+																					newMove = newThreeMove + " " + fourthMove;
+																					
+																					fourMovesAllowed[fourthIdx] = newMove;
+																					
+																					fourthIdx++;
+																													
+																				}
+																				
+																				else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																					
+																					moveTo = pointIndex.get(pointToIdx);
+																					
+																					if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																					
+																						fourthPossible = true;
+																																													
+																						fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																						
+																						newMove = newThreeMove + " " + fourthMove;
+																						
+																						fourMovesAllowed[thirdIdx] = newMove;
+																						
+																						fourthIdx++;
+																													
+																					}
+																					
+																				}
+																				
+																			}
+																		
+																		}
+																		
+																	}
+																	
+																	/*4**************************************************************************/
+																								
+																}
+																
+															}
+															
+														}
+													
+													}
+													
+												}
+												
+												/*3**************************************************************************/
+																				
+											}
+											
+											else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+												
+												moveTo = pointIndex.get(pointToIdx);
+												
+												if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+												
+													secondPossible = true;
+													
+													moveTo.getCounters().push(moveFrom.getCounters().pop());
+													
+													secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+													
+													newMove = firstMoveLarger + " " + secondMove;
+													
+													twoMovesAllowed[secondIdx] = newMove;
+													
+													secondIdx++;
+													
+													/*3**************************************************************************/
+													
+													//Check possible moves with third dice
+													for (int k = 0; k < 24; k++) {
+														
+														if (!pointIndex.get(k).getCounters().isEmpty()) {
+															
+															topCounter = pointIndex.get(k).getCounters().peek();
+														
+															pointFromIdx = k;
+															pointToIdx = k - smallerVal;
+																					
+															if (topCounter.getType() == p.getCounterType()) {
+																
+																moveFrom = pointIndex.get(pointFromIdx);
+																
+																if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																	
+																	thirdPossible = true;
+																		
+																	moveFrom.getCounters().pop();
+																	
+																	thirdMove = pointFromIdx + 1 + "-OFF";
+																	
+																	newThreeMove = newTwoMove + " " + thirdMove;
+																	
+																	threeMovesAllowed[thirdIdx] = newThreeMove;
+																	
+																	thirdIdx++;
+																	
+																	/*4**************************************************************************/
+																	
+																	//Check possible moves with fourth dice
+																	for (int l = 0; l < 24; l++) {
+																		
+																		if (!pointIndex.get(l).getCounters().isEmpty()) {
+																			
+																			topCounter = pointIndex.get(l).getCounters().peek();
+																		
+																			pointFromIdx = l;
+																			pointToIdx = l - smallerVal;
+																									
+																			if (topCounter.getType() == p.getCounterType()) {
+																				
+																				moveFrom = pointIndex.get(pointFromIdx);
+																				
+																				if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																					
+																					fourthPossible = true;
+																																												
+																					fourthMove = pointFromIdx + 1 + "-OFF";
+																					
+																					newMove = newThreeMove + " " + fourthMove;
+																					
+																					fourMovesAllowed[fourthIdx] = newMove;
+																					
+																					fourthIdx++;
+																													
+																				}
+																				
+																				else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																					
+																					moveTo = pointIndex.get(pointToIdx);
+																					
+																					if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																					
+																						fourthPossible = true;
+																																													
+																						fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																						
+																						newMove = newThreeMove + " " + fourthMove;
+																						
+																						fourMovesAllowed[thirdIdx] = newMove;
+																						
+																						fourthIdx++;
+																													
+																					}
+																					
+																				}
+																				
+																			}
+																		
+																		}
+																		
+																	}
+																	
+																	/*4**************************************************************************/
+																									
+																}
+																
+																else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																	
+																	moveTo = pointIndex.get(pointToIdx);
+																	
+																	if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																	
+																		thirdPossible = true;
+																		
+																		moveTo.getCounters().push(moveFrom.getCounters().pop());
+																		
+																		thirdMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																		
+																		newThreeMove = newTwoMove + " " + thirdMove;
+																		
+																		threeMovesAllowed[thirdIdx] = newThreeMove;
+																		
+																		thirdIdx++;
+																		
+																		/*4**************************************************************************/
+																		
+																		//Check possible moves with fourth dice
+																		for (int l = 0; l < 24; l++) {
+																			
+																			if (!pointIndex.get(l).getCounters().isEmpty()) {
+																				
+																				topCounter = pointIndex.get(l).getCounters().peek();
+																			
+																				pointFromIdx = l;
+																				pointToIdx = l - smallerVal;
+																										
+																				if (topCounter.getType() == p.getCounterType()) {
+																					
+																					moveFrom = pointIndex.get(pointFromIdx);
+																					
+																					if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+																						
+																						fourthPossible = true;
+																																													
+																						fourthMove = pointFromIdx + 1 + "-OFF";
+																						
+																						newMove = newThreeMove + " " + fourthMove;
+																						
+																						fourMovesAllowed[fourthIdx] = newMove;
+																						
+																						fourthIdx++;
+																														
+																					}
+																					
+																					else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+																						
+																						moveTo = pointIndex.get(pointToIdx);
+																						
+																						if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																						
+																							fourthPossible = true;
+																																														
+																							fourthMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+																							
+																							newMove = newThreeMove + " " + fourthMove;
+																							
+																							fourMovesAllowed[thirdIdx] = newMove;
+																							
+																							fourthIdx++;
+																														
+																						}
+																						
+																					}
+																					
+																				}
+																			
+																			}
+																			
+																		}
+																		
+																		/*4**************************************************************************/
+																									
+																	}
+																	
+																}
+																
+															}
+														
+														}
+														
+													}
+													
+													/*3**************************************************************************/
+																				
+												}
+												
+											}
+											
+										}
+									
+									}
+									
+								}
+								
+								/*2**************************************************************************/
 								
 							}
 							
@@ -365,114 +1224,62 @@ public class Board {
 				
 			}
 			
+			pointIndex = ogPointIndex;
+			
 		}
 		
 		//Check which dice value is larger
-		else if (toPlay[1] > toPlay[0]) {
+		else if (toPlay[1] != toPlay[0]) {
 			
-			largerVal = toPlay[1];
-			smallerVal = toPlay[0];
-		}
+			if (toPlay[1] > toPlay[0]) {
 				
-		//First check for larger value moved first
-		
-		for (int i = 0; i < 24; i++) {
-						
-			Counter topCounter = null;
+				largerVal = toPlay[1];
+				smallerVal = toPlay[0];
+				
+			}
 			
-			if (!pointIndex.get(i).getCounters().isEmpty()) {
+			if (p.getPlayerNumber() == 2) {
+				
+				largerVal = 0 - largerVal;
+				smallerVal = 0 - smallerVal;
+				
+			}
 			
-				topCounter = pointIndex.get(i).getCounters().peek();
+			//First check for larger value moved first
 			
-				int pointFromIdx = i;
-				int pointToIdx = i - largerVal;
+			for (int i = 0; i < 24; i++) {
+							
+				Counter topCounter = null;
 				
-				Point moveTo = new Point();
+				if (!pointIndex.get(i).getCounters().isEmpty()) {
 				
-				Point moveFrom = new Point();
+					topCounter = pointIndex.get(i).getCounters().peek();
 				
-				if (topCounter.getType() == p.getCounterType()) {
+					int pointFromIdx = i;
+					int pointToIdx = i - largerVal;
 					
-					moveFrom = pointIndex.get(pointFromIdx);
+					Point moveTo = new Point();
 					
-					if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
-						
-						Counter replaceCounter = new Counter(p.getCounterType());
-						
-						firstPossible = true;
-						
-						moveFrom.getCounters().pop();
-						
-						firstMoveLarger = pointFromIdx + 1 + "-OFF";
-								
-						//Check possible moves with second dice value after first has been moved
-						for (int j = 0; j < 24; j++) {
-							
-							if (!pointIndex.get(j).getCounters().isEmpty()) {
-								
-								topCounter = pointIndex.get(j).getCounters().peek();
-							
-								pointFromIdx = j;
-								pointToIdx = j - smallerVal;
-														
-								if (topCounter.getType() == p.getCounterType()) {
-									
-									if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
-										
-										secondPossible = true;
-																				
-										secondMove = pointFromIdx + 1 + "-OFF";
-										
-										newMove = firstMoveLarger + " " + secondMove;
-										
-										movesAllowed[nextIdx] = newMove;
-										
-										nextIdx++;
-																		
-									}
-									
-									else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
-										
-										moveTo = pointIndex.get(pointToIdx);
-										
-										if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
-										
-											secondPossible = true;
-											
-											secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
-											
-											newMove = firstMoveLarger + " " + secondMove;
-											
-											movesAllowed[nextIdx] = newMove;
-											
-											nextIdx++;
-																		
-										}
-										
-									}
-									
-								}
-							
-							}
-							
-						}
-						
-						moveFrom.getCounters().push(replaceCounter);
-						
-					}
+					Point moveFrom = new Point();
 					
-					else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+					if (topCounter.getType() == p.getCounterType()) {
 						
-						moveTo = pointIndex.get(pointToIdx);
+						moveFrom = pointIndex.get(pointFromIdx);
+						
+						if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 							
-						if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
-												
+							Counter replaceCounter = new Counter(p.getCounterType());
+							
 							firstPossible = true;
 							
-							moveTo.getCounters().push(moveFrom.getCounters().pop());
-														
-							firstMoveLarger = pointFromIdx + 1 + "-" + (pointToIdx + 1);
-								
+							moveFrom.getCounters().pop();
+							
+							firstMoveLarger = pointFromIdx + 1 + "-OFF";
+							
+							oneMoveAllowed[firstIdx] = firstMoveLarger;
+							
+							firstIdx++;
+							
 							//Check possible moves with second dice value after first has been moved
 							for (int j = 0; j < 24; j++) {
 								
@@ -488,33 +1295,33 @@ public class Board {
 										if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 											
 											secondPossible = true;
-																						
+																					
 											secondMove = pointFromIdx + 1 + "-OFF";
 											
 											newMove = firstMoveLarger + " " + secondMove;
 											
-											movesAllowed[nextIdx] = newMove;
+											twoMovesAllowed[secondIdx] = newMove;
 											
-											nextIdx++;
-																				
+											secondIdx++;
+																			
 										}
 										
 										else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 											
 											moveTo = pointIndex.get(pointToIdx);
-			
+											
 											if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+											
+												secondPossible = true;
+												
+												secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+												
+												newMove = firstMoveLarger + " " + secondMove;
+												
+												twoMovesAllowed[secondIdx] = newMove;
+												
+												secondIdx++;
 																			
-											secondPossible = true;
-											
-											secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
-											
-											newMove = firstMoveLarger + " " + secondMove;
-											
-											movesAllowed[nextIdx] = newMove;
-											
-											nextIdx++;
-																				
 											}
 											
 										}
@@ -524,120 +1331,126 @@ public class Board {
 								}
 								
 							}
-														
-							moveFrom.getCounters().push(pointIndex.get(i - largerVal).getCounters().pop());
+							
+							moveFrom.getCounters().push(replaceCounter);
 							
 						}
 						
-					}
-					
-				}
-			
-			}
-			
-		}
-		
-		//Check for smaller value moved first
-		
-		for (int i = 0; i < 24; i++) {
-						
-			Counter topCounter = null;
-			
-			if (!pointIndex.get(i).getCounters().isEmpty()) {
-			
-				topCounter = pointIndex.get(i).getCounters().peek();
-			
-				int pointFromIdx = i;
-				int pointToIdx = i - smallerVal;
-				
-				Point moveTo = new Point();
-				
-				Point moveFrom = new Point();
-				
-				if (topCounter.getType() == p.getCounterType()) {
-					
-					moveFrom = pointIndex.get(pointFromIdx);
-					
-					if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
-						
-						Counter replaceCounter = new Counter(p.getCounterType());
-						
-						firstPossible = true;
-						
-						moveFrom.getCounters().pop();
-						
-						firstMoveSmaller = pointFromIdx + 1 + "-OFF";
-						
-						
-						//Check possible moves with second dice value after first has been moved
-						
-						for (int j = 0; j < 24; j++) {
+						else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
 							
-							if (!pointIndex.get(j).getCounters().isEmpty()) {
+							moveTo = pointIndex.get(pointToIdx);
 								
-								topCounter = pointIndex.get(j).getCounters().peek();
-							
-								pointFromIdx = j;
-								pointToIdx = j - largerVal;
-														
-								if (topCounter.getType() == p.getCounterType()) {
-																		
-									if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
-										
-										secondPossible = true;
-																		
-										secondMove = pointFromIdx + 1 + "-OFF";
-										
-										newMove = firstMoveSmaller + " " + secondMove;
-										
-										movesAllowed[nextIdx] = newMove;
-										
-										nextIdx++;
-										
-									}
+							if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+													
+								firstPossible = true;
+								
+								moveTo.getCounters().push(moveFrom.getCounters().pop());
+															
+								firstMoveLarger = pointFromIdx + 1 + "-" + (pointToIdx + 1);
 									
-									else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+								oneMoveAllowed[firstIdx] = firstMoveLarger;
+								
+								firstIdx++;
+								
+								//Check possible moves with second dice value after first has been moved
+								for (int j = 0; j < 24; j++) {
+									
+									if (!pointIndex.get(j).getCounters().isEmpty()) {
 										
-										moveTo = pointIndex.get(pointToIdx);
-										
-										if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
-										
-											secondPossible = true;
+										topCounter = pointIndex.get(j).getCounters().peek();
+									
+										pointFromIdx = j;
+										pointToIdx = j - smallerVal;
+																
+										if (topCounter.getType() == p.getCounterType()) {
 											
-											secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+											if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+												
+												secondPossible = true;
+																							
+												secondMove = pointFromIdx + 1 + "-OFF";
+												
+												newMove = firstMoveLarger + " " + secondMove;
+												
+												twoMovesAllowed[secondIdx] = newMove;
+												
+												secondIdx++;
+																					
+											}
 											
-											newMove = firstMoveSmaller + " " + secondMove;
+											else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+												
+												moveTo = pointIndex.get(pointToIdx);
+				
+												if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																				
+												secondPossible = true;
+												
+												secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+												
+												newMove = firstMoveLarger + " " + secondMove;
+												
+												twoMovesAllowed[secondIdx] = newMove;
+												
+												secondIdx++;
+																					
+												}
+												
+											}
 											
-											movesAllowed[nextIdx] = newMove;
-											
-											nextIdx++;
-										
 										}
-										
+									
 									}
 									
 								}
-							
+															
+								moveFrom.getCounters().push(pointIndex.get(i - largerVal).getCounters().pop());
+								
 							}
 							
 						}
 						
-						moveFrom.getCounters().push(replaceCounter);
-						
 					}
+				
+				}
+				
+			}
+			
+			//Check for smaller value moved first
+			
+			for (int i = 0; i < 24; i++) {
+							
+				Counter topCounter = null;
+				
+				if (!pointIndex.get(i).getCounters().isEmpty()) {
+				
+					topCounter = pointIndex.get(i).getCounters().peek();
+				
+					int pointFromIdx = i;
+					int pointToIdx = i - smallerVal;
 					
-					else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+					Point moveTo = new Point();
+					
+					Point moveFrom = new Point();
+					
+					if (topCounter.getType() == p.getCounterType()) {
 						
-						moveTo = pointIndex.get(pointToIdx);
+						moveFrom = pointIndex.get(pointFromIdx);
 						
-						if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
-						
+						if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+							
+							Counter replaceCounter = new Counter(p.getCounterType());
+							
 							firstPossible = true;
 							
-							moveTo.getCounters().push(moveFrom.getCounters().pop());
+							moveFrom.getCounters().pop();
 							
-							firstMoveSmaller = pointFromIdx + 1 + "-" + (pointToIdx + 1);
-						
+							firstMoveSmaller = pointFromIdx + 1 + "-OFF";
+							
+							oneMoveAllowed[firstIdx] = firstMoveSmaller;
+							
+							firstIdx++;
+							
 							//Check possible moves with second dice value after first has been moved
 							
 							for (int j = 0; j < 24; j++) {
@@ -648,20 +1461,20 @@ public class Board {
 								
 									pointFromIdx = j;
 									pointToIdx = j - largerVal;
-																
+															
 									if (topCounter.getType() == p.getCounterType()) {
-										
+																			
 										if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
 											
 											secondPossible = true;
-																				
+																			
 											secondMove = pointFromIdx + 1 + "-OFF";
 											
 											newMove = firstMoveSmaller + " " + secondMove;
 											
-											movesAllowed[nextIdx] = newMove;
+											twoMovesAllowed[secondIdx] = newMove;
 											
-											nextIdx++;
+											secondIdx++;
 											
 										}
 										
@@ -670,16 +1483,16 @@ public class Board {
 											moveTo = pointIndex.get(pointToIdx);
 											
 											if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
-																				
+											
 												secondPossible = true;
 												
 												secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
 												
 												newMove = firstMoveSmaller + " " + secondMove;
 												
-												movesAllowed[nextIdx] = newMove;
+												twoMovesAllowed[secondIdx] = newMove;
 												
-												nextIdx++;
+												secondIdx++;
 											
 											}
 											
@@ -691,33 +1504,196 @@ public class Board {
 								
 							}
 							
-							moveFrom.getCounters().push(pointIndex.get(i - smallerVal).getCounters().pop());	
+							moveFrom.getCounters().push(replaceCounter);
 							
-						}	
+						}
+						
+						else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+							
+							moveTo = pointIndex.get(pointToIdx);
+							
+							if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+							
+								firstPossible = true;
+								
+								moveTo.getCounters().push(moveFrom.getCounters().pop());
+								
+								firstMoveSmaller = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+								
+								oneMoveAllowed[firstIdx] = firstMoveSmaller;
+								
+								firstIdx++;
+							
+								//Check possible moves with second dice value after first has been moved
+								
+								for (int j = 0; j < 24; j++) {
+									
+									if (!pointIndex.get(j).getCounters().isEmpty()) {
+										
+										topCounter = pointIndex.get(j).getCounters().peek();
+									
+										pointFromIdx = j;
+										pointToIdx = j - largerVal;
+																	
+										if (topCounter.getType() == p.getCounterType()) {
+											
+											if (canBearOff(p) && (pointToIdx < 0 || pointToIdx > NUM_POINTS - 1)) {
+												
+												secondPossible = true;
+																					
+												secondMove = pointFromIdx + 1 + "-OFF";
+												
+												newMove = firstMoveSmaller + " " + secondMove;
+												
+												twoMovesAllowed[secondIdx] = newMove;
+												
+												secondIdx++;
+												
+											}
+											
+											else if (!(pointToIdx < 0) && !(pointToIdx > NUM_POINTS - 1)){
+												
+												moveTo = pointIndex.get(pointToIdx);
+												
+												if (moveTo.getCounters().isEmpty() || moveTo.getCounters().peek().getType() == currentPlayer.getCounterType() || moveTo.getCounters().peek().getType() != currentPlayer.getCounterType() && moveTo.getCounters().size() == 1) {
+																					
+													secondPossible = true;
+													
+													secondMove = pointFromIdx + 1 + "-" + (pointToIdx + 1);
+													
+													newMove = firstMoveSmaller + " " + secondMove;
+													
+													twoMovesAllowed[secondIdx] = newMove;
+													
+													secondIdx++;
+												
+												}
+												
+											}
+											
+										}
+									
+									}
+									
+								}
+								
+								moveFrom.getCounters().push(pointIndex.get(i - smallerVal).getCounters().pop());	
+								
+							}	
+							
+						}
 						
 					}
-					
+				
 				}
+				
+			}
+		
+		}
+		
+		if (toPlay[0] != toPlay[1]) {
 			
+			if (secondPossible == false) {
+								
+				movesAllowed = oneMoveAllowed;
+						
+			}
+			
+			else if(firstPossible == false) {
+				
+				System.out.print("No possible moves. Lose your turn.");
+					
+				
+			}
+			
+			else {
+				
+				movesAllowed = twoMovesAllowed;
+
+				
 			}
 			
 		}
 		
-		if (secondPossible == false) {
+		else {
 			
-			newMove = firstMoveLarger;
+			if (fourthPossible == true) {
+				
+				movesAllowed = fourMovesAllowed;
+				
+			}
 			
-			movesAllowed[nextIdx] = newMove;
+			else if (fourthPossible == false && thirdPossible == true) {
+				
+				movesAllowed = threeMovesAllowed;
+				
+			}
 			
-		}
-		
-		else if(firstPossible == false) {
+			else if (fourthPossible == false && thirdPossible == false && secondPossible == true) {
+				
+				movesAllowed = twoMovesAllowed;
+				
+			}
 			
-			movesAllowed[nextIdx] = "No possible moves.";
+			else if (fourthPossible == false && thirdPossible == false && secondPossible == false && firstPossible == true) {
+								
+				movesAllowed = oneMoveAllowed;
 						
+			}
+			
+			else  {
+				
+				System.out.print("No possible moves. Lose your turn.");
+					
+				movesAllowed = oneMoveAllowed;
+				
+			}
+			
 		}
 		
 		return movesAllowed;
+		
+	}
+	
+	public void makeMove(int moveNum, String[] allowedMoves) {
+		
+		Point moveFrom = new Point();
+		Point moveTo = new Point();
+		
+		String moveSelected = allowedMoves[moveNum];
+		
+		String[] movesToPlay = new String[99];
+		
+		if (!(moveSelected == null)) {
+		
+			movesToPlay = moveSelected.split(" ");
+			
+			String[] moveIdx = new String[2];
+			
+			for (int i = 0; i < movesToPlay.length; i++) {
+				
+				moveIdx = movesToPlay[i].split("-");
+				
+				if (moveIdx[1] == "OFF") {
+					
+					moveFrom = pointIndex.get(Integer.valueOf(moveIdx[0]));
+					
+					moveFrom.getCounters().pop();
+					
+				}
+				
+				else {
+					
+					moveFrom = pointIndex.get(Integer.valueOf(moveIdx[0]));
+					moveTo = pointIndex.get(Integer.valueOf(moveIdx[1]));
+					
+					moveTo.getCounters().push(moveFrom.getCounters().pop());
+					
+				}
+				
+			}
+			
+		}
 		
 	}
 	
@@ -1313,16 +2289,18 @@ public class Board {
 		
 		if (currentPlayer.getPlayerNumber() == 1) {
 			
-			System.out.println(ConsoleColors.CYAN_BOLD_BRIGHT + "Current Player: " + ConsoleColors.WHITE_BOLD_BRIGHT + currentPlayer.getPlayerName() + "\n" + ConsoleColors.RESET);
+			System.out.println(ConsoleColors.CYAN_BOLD_BRIGHT + "\nCurrent Player: " + ConsoleColors.WHITE_BOLD_BRIGHT + currentPlayer.getPlayerName() + ConsoleColors.RESET);
 			
 		}
 		
 		else {
 			
-			System.out.println(ConsoleColors.CYAN_BOLD_BRIGHT + "Current Player: " + ConsoleColors.RED_BOLD_BRIGHT + currentPlayer.getPlayerName() + "\n" + ConsoleColors.RESET);
+			System.out.println(ConsoleColors.CYAN_BOLD_BRIGHT + "\nCurrent Player: " + ConsoleColors.RED_BOLD_BRIGHT + currentPlayer.getPlayerName() + ConsoleColors.RESET);
 
 			
 		}
+				
+		displayCube();
 		
 		
 	}
@@ -1353,9 +2331,39 @@ public class Board {
 		
 	}
 	
-	public void Move(Command c) {
+	public void displayCube() {
 		
+		Player owner = scoreboard.getCubeOwner();
 		
+		String color = ConsoleColors.YELLOW;
+		
+		if (owner == null) {
+			
+			System.out.print(color + "---\n" + ConsoleColors.RESET);
+			System.out.println(color + "|" + scoreboard.getStake() + "|" + ConsoleColors.PURPLE_BOLD_BRIGHT + " Cube owner: " + color + "No one" + ConsoleColors.RESET);
+			System.out.println(color + "---" + ConsoleColors.RESET);
+			
+		}
+		
+		else if (owner.getPlayerNumber() == 1) {
+			
+			color = ConsoleColors.WHITE_BOLD_BRIGHT;
+			
+			System.out.print(color + "---\n" + ConsoleColors.RESET);
+			System.out.println(color + "|" + scoreboard.getStake() + "|" + ConsoleColors.PURPLE_BOLD_BRIGHT + " Cube owner: " + color + owner.getPlayerName() + ConsoleColors.RESET);
+			System.out.println(color + "---" + ConsoleColors.RESET);
+			
+		}
+		
+		else if (owner.getPlayerNumber() == 2) {
+			
+			color = ConsoleColors.RED_BOLD_BRIGHT;
+			
+			System.out.print(color + "---\n" + ConsoleColors.RESET);
+			System.out.println(color + "|" + scoreboard.getStake() + "|" + ConsoleColors.PURPLE_BOLD_BRIGHT + " Cube owner: " + color + owner.getPlayerName() + ConsoleColors.RESET);
+			System.out.println(color + "---" + ConsoleColors.RESET);
+			
+		}
 		
 		
 	}

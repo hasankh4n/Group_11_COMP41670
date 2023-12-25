@@ -2,33 +2,72 @@ package BackgammonTest;
 
 public class Command {
 
-	 private enum CommandType {ROLL, QUIT, PIP, HINT, DOUBLE};
+	 private enum CommandType {ROLL, ROLLSPEC, MOVE, QUIT, PIP, HINT, DOUBLE};
 	    private CommandType commandtype;
+	    private String moveNum = new String();
+	    private String[] rollNums = new String[2];
 
 	    Command (String command) {
 	        
 	    	String commandFormatted = command.toUpperCase();
-
-	        switch(commandFormatted){
-	            case "Q":
-	                commandtype = CommandType.QUIT;
-	                break;
-	            case "R":
-	                commandtype = CommandType.ROLL;
-	                break;
-	            case "P":
-	            	commandtype = CommandType.PIP;
-	            	break;
-	            case "H":
-	            	commandtype = CommandType.HINT;
-	            	break;
-	            case "D":
-	            	commandtype = CommandType.DOUBLE;
-	            	break;
-	            default:
-	                commandtype = CommandType.ROLL;
-	                break;
+	        
+	        if (commandFormatted.equals("Q")) {
+	        
+	        	commandtype = CommandType.QUIT;
+	        	
 	        }
+	        
+	        else if (commandFormatted.equals("R")) {
+		        
+	        	commandtype = CommandType.ROLL;
+	        	
+	        }
+	        	
+	        else if (commandFormatted.matches("R[1-6][1-6]")) {
+	        	
+	        	commandtype = CommandType.ROLLSPEC;
+                rollNums[0] = commandFormatted.substring(1, 2);
+                rollNums[1] = commandFormatted.substring(2, 3);
+	        	
+	        }
+	        
+	        else if (commandFormatted.matches("^[1-9][0-9]*$")) {
+	        	
+	        	commandtype = CommandType.MOVE;
+	        	
+	        	if (commandFormatted.length() == 1) {
+	        		
+	                moveNum = commandFormatted.substring(0, 1);
+	        		
+	        	}
+	        	
+	        	else if (commandFormatted.length() == 2) {
+	        		
+	                moveNum = commandFormatted.substring(0, 2);
+	        		
+	        	}
+	        	
+	        	
+	        }
+	        
+	        else if (commandFormatted.equals("P")) {
+		        
+	        	commandtype = CommandType.PIP;
+	        	
+	        }
+	        
+	        else if (commandFormatted.equals("H")) {
+		        
+	        	commandtype = CommandType.HINT;
+	        	
+	        }
+	        
+	        else if (commandFormatted.equals("D")) {
+		        
+	        	commandtype = CommandType.DOUBLE;
+	        	
+	        }
+	        
 	    }
 
 	       // User Input Check
@@ -37,9 +76,23 @@ public class Command {
 			String commandFormatted = command.toUpperCase();//valid input regardless of input case
 			
 			return  commandFormatted.equals("Q") || commandFormatted.equals("R") ||
-					commandFormatted.equals("P") || commandFormatted.matches("R[1-6]Q[1-6]") || commandFormatted.equals("H") 
-					|| commandFormatted.equals("D");
-		}		
+					commandFormatted.equals("P") || commandFormatted.matches("R[1-6][1-6]") || commandFormatted.equals("H") 
+					|| commandFormatted.equals("D") || commandFormatted.matches("^[1-9][0-9]*$");
+		}	
+		
+		public String[] getRollNums() {
+			
+			return rollNums;
+			
+		}
+		
+		public int getMoveNum() {
+			
+			int number = Integer.valueOf(moveNum);
+			
+			return number;
+			
+		}
 
 	    //User Input related methods
 	    public boolean quit() {
@@ -52,6 +105,18 @@ public class Command {
 	    	
 	        return commandtype == CommandType.ROLL;
 	        
+	    }
+	    
+	    public boolean rollspec() {
+	    	
+	    	return commandtype == CommandType.ROLLSPEC;
+	    	
+	    }
+	    
+	    public boolean move() {
+	    	
+	    	return commandtype == CommandType.MOVE;
+	    	
 	    }
 	    
 	    public boolean pip() {
