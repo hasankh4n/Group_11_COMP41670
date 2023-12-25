@@ -5,6 +5,13 @@ import org.junit.jupiter.api.Test;
 // 'faking' user inputs and outputs in the testing environment / dependency injection , which is beyond the scope of unit testing 
 // As such, this test class is a starting point to implement these features if we were to refactor the Display class to include them
 
+/**
+ * Group Number: 11
+ * @author James Duke, Hasan Khan
+ * GitHub IDs: jamesduke488, hasankh4n
+ * @version 1.1
+ */
+
 class DisplayTest {
 
     private Display display;
